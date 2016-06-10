@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+       default-lazy-init="true">
+
+    <!-- Query Sample -->
+    <bean id="namedQueryBean" class="com.redwood.rp.core.util.QueryDefinitionBean">
+    	<property name="commonQueries" ref="commonQueries"/>
+        <property name="namedQueryMap">
+          <map>
+             <entry>
+                 <key><value>GET_USERS</value></key>
+                 <value><![CDATA[
+						SELECT R.roleId, R.userId, R.status, R.lastName, R.firstName, R.email, R.company, R.title
+						FROM users R WHERE R.roleId=:ROLE_ID and status=1						
+                 ]]></value>
+             </entry>             
+             <entry>
+                 <key><value>CREATE_NEW_USER</value></key>
+                 <value><![CDATA[
+						INSERT INTO users (roleId, status, firstName, lastName, company, title, email) 
+						VALUES (:ROLE_ID, :STATUS, :FIRST_NAME, :LAST_NAME, :COMPANY, :TITLE, :EMAIL)
+                 ]]></value>
+             </entry> 
+             <entry>
+                 <key><value>GET_AUDIENCE</value></key>
+                 <value><![CDATA[
+						SELECT R.audienceId, R.audience, R.status
+						FROM lookup_audience R WHERE R.status=1						
+                 ]]></value>
+             </entry> 
+             <entry>
+                 <key><value>GET_OBJECTIVE</value></key>
+                 <value><![CDATA[
+						SELECT R.objectiveId, R.objective, R.status
+						FROM lookup_objective R WHERE R.status=1						
+                 ]]></value>
+             </entry> 
+              <entry>
+                 <key><value>GET_ASSET_TYPES</value></key>
+                 <value><![CDATA[
+						SELECT R.assetTypeId, R.assetType, R.status
+						FROM lookup_asset_type R WHERE R.status=1
+						
+                 ]]></value>
+             </entry>           
+             
+             <entry>
+                 <key><value>CREATE_ASSET_TYPES</value></key>
+                 <value><![CDATA[
+						INSERT INTO lookup_asset_type (assetType, status) VALUES (:ASSET_TYPE, :STATUS)		
+                 ]]></value>
+             </entry> 
+             
+             <entry>
+                 <key><value>REMOVE_ASSET_TYPES</value></key>
+                 <value><![CDATA[
+                 	UPDATE lookup_asset_type SET status=:STATUS
+						WHERE assetTypeId=:ASSET_TYPE_ID                 		
+                 ]]></value>
+             </entry>
+             
+             <entry>
+                 <key><value>EDIT_ASSET_TYPE</value></key>
+                 <value><![CDATA[
+                 	UPDATE lookup_asset_type SET status=:STATUS, assetType=:ASSET_TYPE
+						WHERE assetTypeId=:ASSET_TYPE_ID						     		
+                 ]]></value>
+             </entry>
+             <entry>
+                 <key><value>GET_ROLES</value></key>
+                 <value><![CDATA[
+						SELECT R.roleId, R.role, R.status
+						FROM roles R WHERE R.status=1
+						
+                 ]]></value>
+             </entry>           
+             
+             <entry>
+                 <key><value>CREATE_ROLES</value></key>
+                 <value><![CDATA[
+						INSERT INTO roles (role, status) VALUES (:ROLE_NAME, :ROLE_STATUS)		
+                 ]]></value>
+             </entry> 
+             
+             <entry>
+                 <key><value>REMOVE_ROLES</value></key>
+                 <value><![CDATA[
+                 	UPDATE roles SET status=:ROLE_STATUS
+						WHERE roleId=:ROLE_ID                 		
+                 ]]></value>
+             </entry>
+             
+             <entry>
+                 <key><value>EDIT_ROLES</value></key>
+                 <value><![CDATA[
+                 	UPDATE roles SET status=:ROLE_STATUS, role=:ROLE_NAME
+						WHERE roleId=:ROLE_ID						     		
+                 ]]></value>
+             </entry>
+             
+             <entry>
+                 <key><value>GET_TASK_BY_TASK_ID</value></key>
+                 <value><![CDATA[
+						SELECT T.taskId, T.assetTypeId, T.status, T.title, T.description, T.seoInstructions, T.briefId, T.templateName, T.workingTime, 
+						T.publishTime, T.minWords, T.maxWords, T.contentId, T.trackingId, T.priority, T.requestedBy, T.owner, 
+						T.assignedTo, T.author, T.destinationId, T.updatedBy, T.createdBy, T.startDate, 
+						T.endDate, T.publishDate, T.createdDate
+						
+						FROM tasks T WHERE T.taskId=:TASK_ID AND T.status > 0
+						
+                 ]]></value>
+             </entry> 
+             
+             <entry>
+                 <key><value>GET_TASKS</value></key>
+                 <value><![CDATA[
+						SELECT R.taskId, R.templateName, R.createdBy, R.createdDate, R.description,
+						R.seoInstructions, R.title, R.assignedTo, R.briefId, R.status
+						FROM tasks R WHERE R.status > 0
+						
+                 ]]></value>
+             </entry>           
+                          
+             <entry>
+                 <key><value>CREATE_NEW_TASK</value></key>
+                 <value><![CDATA[
+						INSERT INTO tasks (assetTypeId, status, title, description, seoInstructions, briefId, minWords, maxWords, templateName, 
+						workingTime, publishTime, contentId, trackingId, priority, requestedBy, owner, assignedTo,
+						author, updatedBy, createdBy, startDate, endDate, publishDate) VALUES 
+						(:ASSET_TYPE, :STATUS, :TITLE, :DESCRIPTION, :SEO_INSTRUCTIONS, :BRIEF, :MIN_WORDS, :MAX_WORDS, :TEMPLATE_NAME, :WORKING_TIME,
+						:PUBLISH_TIME, :CONTENT_ID, :TRACKING_ID, :PRIORITY, :REQUESTED_BY, :OWNER, :ASSIGNED_TO,
+						:AUTHOR, :UPDATED_BY, :CREATED_BY, :START_DATE, :END_DATE, :PUBLISH_DATE)		
+                 ]]></value>
+             </entry> 
+             
+             <entry>
+                 <key><value>DELETE_TASK</value></key>
+                 <value><![CDATA[
+                 	UPDATE tasks SET status=:STATUS
+						WHERE taskId=:TASK_ID                 		
+                 ]]></value>
+             </entry>
+             
+             <entry>
+                 <key><value>EDIT_TASK</value></key>
+                 <value><![CDATA[
+                 	UPDATE tasks SET status=:STATUS, assetTypeId=:ASSET_TYPE, title=:TITLE, description=:DESCRIPTION, briefId=:BRIEF, 
+                 	seoInstructions=:SEO_INSTRUCTIONS, templateName=:TEMPLATE_NAME, workingTime=:WORKING_TIME, publishTime=:PUBLISH_TIME, minWords=:MIN_WORDS,
+                 	maxWords=:MAX_WORDS, contentId=:CONTENT_ID, trackingId=:TRACKING_ID, priority=:PRIORITY, 
+                 	requestedBy=:REQUESTED_BY, owner=:OWNER, assignedTo=:ASSIGNED_TO, author=:AUTHOR, 
+                 	updatedBy=:UPDATED_BY, createdBy=:CREATED_BY, startDate=:START_DATE, endDate=:END_DATE, publishDate=:PUBLISH_DATE					                 	
+                 	
+					WHERE taskId=:TASK_ID						     		
+                 ]]></value>
+             </entry>        
+        
+              <entry>
+                 <key><value>GET_CONTENT_BY_ID</value></key>
+                 <value><![CDATA[
+						SELECT T.contentId, T.status, T.title, T.description, T.contentType, T.rawContent, T.fullContent, T.documentFormat, T.owner, T.formattingSchema,
+						T.author, T.category, T.destinationId, T.updatedBy, T.createdBy, T.updatedDate, T.createdDate
+						
+						FROM content T WHERE T.contentId=:CONTENT_ID AND T.status > 0
+						
+                 ]]></value>
+             </entry>           
+                          
+             <entry>
+                 <key><value>CREATE_NEW_CONTENT</value></key>
+                 <value><![CDATA[
+						INSERT INTO content (status, title, description, fullContent, rawContent, documentFormat, formattingSchema, owner,
+						author, contentType, category, destinationId, updatedBy, createdBy, createdDate) VALUES 
+						(:STATUS, :TITLE, :DESCRIPTION, :FULL_CONTENT, :RAW_CONTENT, :DOC_FORMAT, :LAYOUT_SCHEMA, :OWNER,
+						:AUTHOR, :CONTENT_TYPE, :CATEGORY, :DESTINATION_ID, :UPDATED_BY, :CREATED_BY, :CREATED_DATE)		
+                 ]]></value>
+             </entry> 
+             
+             <entry>
+                 <key><value>DELETE_CONTENT</value></key>
+                 <value><![CDATA[
+                 	UPDATE content SET status=:STATUS
+						WHERE contentId=:CONTENT_ID                 		
+                 ]]></value>
+             </entry>
+             
+             <entry>
+                 <key><value>EDIT_CONTENT</value></key>
+                 <value><![CDATA[
+                 	UPDATE content SET status=:STATUS, title=:TITLE, description=:DESCRIPTION, fullContent=:FULL_CONTENT, documentFormat=:DOC_FORMAT, 
+                 	category=:CATEGORY, owner=:OWNER, contentType=:CONTENT_TYPE, author=:AUTHOR, formattingSchema=:LAYOUT_SCHEMA, rawContent=:RAW_CONTENT,
+                 	 destinationId=:DESTINATION_ID, updatedBy=:UPDATED_BY, createdBy=:CREATED_BY					                 	
+                 	
+						WHERE contentId=:CONTENT_ID						     		
+                 ]]></value>
+             </entry>
+             
+             <entry>
+                 <key><value>GET_BRIEF_BY_ID</value></key>
+                 <value><![CDATA[
+						SELECT T.briefId, T.status, T.name, T.audienceDescription, T.audienceId, T.objectiveId, 
+						T.objectiveDescription, T.sourcing, T.updatedBy, T.createdBy
+						
+						FROM brief T WHERE T.briefId=:BRIEF_ID AND T.status=1
+						
+                 ]]></value>
+             </entry>           
+                          
+             <entry>
+                 <key><value>CREATE_NEW_BRIEF</value></key>
+                 <value><![CDATA[
+						INSERT INTO brief (status, name, audienceDescription, audienceId, objectiveId, 
+						objectiveDescription, sourcing, updatedBy, createdBy) VALUES 
+						(:STATUS, :NAME, :AUDIENCE_DESC, :AUDIENCE, :OBJECTIVE, :OBJ_DESC, :SOURCING, 
+						:UPDATED_BY, :CREATED_BY)		
+                 ]]></value>
+             </entry> 
+             
+             <entry>
+                 <key><value>DELETE_BRIEF</value></key>
+                 <value><![CDATA[
+                 		UPDATE brief SET status=:STATUS
+						WHERE briefId=:BRIEF_ID                 		
+                 ]]></value>
+             </entry>
+             
+             <entry>
+                 <key><value>EDIT_BRIEF</value></key>
+                 <value><![CDATA[
+                 	UPDATE brief SET status=:STATUS, name=:NAME, audienceDescription=:AUDIENCE_DESC, 
+                 	audienceId=:AUDIENCE, objectiveId=:OBJECTIVE, objectiveDescription=:OBJ_DESC, 
+                 	sourcing=:SOURCING, updatedBy=:UPDATED_BY, createdBy=:CREATED_BY					                 	
+                 	
+					WHERE briefId=:BRIEF_ID						     		
+                 ]]></value>
+             </entry>
+             
+             <entry>
+                 <key><value>GET_BRIEFS</value></key>
+                 <value><![CDATA[
+						SELECT R.briefId, R.name
+						FROM brief R WHERE R.status=1 AND !(R.name IS NULL OR R.name = '')
+						
+                 ]]></value>
+             </entry>
+        
+             <entry>
+                 <key><value>GET_USER_DETAILS_BY_USER_ID</value></key>
+                 <value><![CDATA[
+						SELECT R.userId, R.firstName, R.lastName, R.city, R.State, R.countryId, R.zipCode, R.companyName, R.title, 
+						R.email, R.phone, R.mobile, R.address, R.address1, R.status, R.username , CAST(DECODE(password,'rts@I4as') AS CHAR) password
+											 
+						FROM registration R						
+						WHERE R.userId=:USER_ID
+                 ]]></value>
+             </entry>  
+             <entry>
+                 <key><value>GET_USER_DETAILS_BY_USER_EMAIL_ID</value></key>
+                 <value><![CDATA[
+						SELECT R.userId, R.firstName, R.lastName, R.city, R.State, R.countryId, R.zipCode, R.companyName, R.title, 
+						R.email, R.phone, R.mobile, R.address, R.address1, R.status, R.username , CAST(DECODE(password,'rts@I4as') AS CHAR) password
+											 
+						FROM registration R						
+						WHERE R.email=:USER_EMAIL_ID
+                 ]]></value>
+             </entry>   
+             
+             <entry>
+                 <key><value>CHECK_IS_USER_REGISTERED</value></key>
+                 <value><![CDATA[
+						SELECT R.firstName, R.lastName, R.email, R.suspend, md5(R.email) as str1, SUBSTRING(MD5(RAND()) FROM 1 FOR 8) as str2
+											 
+						FROM registration R						
+						WHERE R.email=:EMAIL_ADDRESS
+                 ]]></value>
+             </entry>              
+                       
+ 
+              <entry>
+                 <key><value>UPDATE_USER_PASSWORD</value></key>
+                 <value><![CDATA[
+                 		UPDATE registration
+						SET  password=ENCODE(:NEW_PASSWORD,'rts@I4as')			
+						WHERE userId=:USER_ID
+                 ]]></value>
+             </entry>
+             
+             <entry>
+                 <key><value>UPDATE_FORGOT_PASSWORD</value></key>
+                 <value><![CDATA[
+                 		UPDATE registration
+						SET  password=ENCODE(:NEW_PASSWORD,'rts@I4as')			
+						WHERE email=:EMAIL
+                 ]]></value>
+             </entry>
+             
+             <entry>
+                 <key><value>GET_USER_PASSWORD</value></key>
+                 <value><![CDATA[
+						SELECT R.email, CAST(DECODE(password,'rts@I4as') AS CHAR) password, R.fpwd_random_str, R.fpwd_exp_time
+											 
+						FROM registration R						
+						WHERE R.userId=:USER_ID
+                 ]]></value>
+             </entry>
+             
+             <entry>
+                 <key><value>GET_USER_PASSWORD_BY_EMAIL</value></key>
+                 <value><![CDATA[
+						SELECT R.email, CAST(DECODE(password,'rts@I4as') AS CHAR) password, R.fpwd_random_str, R.fpwd_exp_time
+											 
+						FROM registration R						
+						WHERE R.email=:EMAIL_ADDRESS
+                 ]]></value>
+             </entry>
+                        
+             <entry>
+                 <key><value>GET_BASE_USER_INFO_BY_EMAIL</value></key>
+                 <value><![CDATA[
+						SELECT R.userId, R.firstName, R.lastName, R.email, R.suspend
+						FROM registration R						
+						WHERE R.email=:email
+                 ]]></value>
+             </entry>              
+             <entry>
+                 <key><value>GET_PASSWORD_BY_EMAIL</value></key>
+                 <value><![CDATA[
+						SELECT CAST(DECODE(password,'rts@I4as') AS CHAR) password
+								FROM registration 
+								WHERE email=:email
+                 ]]></value>
+             </entry>             
+             <entry>
+                 <key><value>GET_BASE_USER_INFO_BY_USER_ID</value></key>
+                 <value><![CDATA[
+						SELECT R.userId, R.firstName, R.lastName, R.email, R.suspend,
+						CAST(DECODE(password,'rts@I4as') AS CHAR) as password
+						FROM registration R						
+						WHERE R.userId=:userId
+                 ]]></value>
+             </entry>             
+             <entry>
+                 <key><value>GET_BASE_USER_INFO_BY_UUID</value></key>
+                 <value><![CDATA[
+						SELECT R.userId, R.email, R.fpwd_exp_time
+						FROM registration R						
+						WHERE R.fpwd_random_str=:fpwd_random_str
+                 ]]></value>
+             </entry>
+ 			 <entry>
+                 <key><value>INSERT_USER_PERMISSION</value></key>
+                 <value><![CDATA[
+                        INSERT INTO oauth_user_permission(oauth_id,user_id,permission_enable,created_by,updated_by,created_date,updated_date)
+                        VALUES (:OAUTH_ID,:USER_ID,:PERMISSION_ENABLE,:CREATED_BY,:UPDATED_BY,:CREATED_DATE,:UPDATED_DATE)
+				 ]]></value>
+             </entry>
+          </map>
+        </property>
+    </bean>
+
+
+</beans>

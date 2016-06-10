@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd"
+	default-lazy-init="true">
+	
+	
+<!--  Commented this to implement the Map implementation alon with the place holder implementation -->
+<!--  loading the .properties files into the context so that it can be used via @Value annotation directly instead of PropertyUtil -->
+<!-- 	<context:property-placeholder -->
+<!-- 		location="classpath*:properties/${redwood.environment}/*.properties" -->
+<!-- 		ignore-resource-not-found="true" ignore-unresolvable="true" /> -->
+<!-- 	<context:property-placeholder -->
+<!-- 		location="classpath*:properties/common/*.properties" -->
+<!-- 		ignore-resource-not-found="true" ignore-unresolvable="true" /> -->
+
+ 
+	<!--  loading the .properties files into the context so that it can be used via @Value annotation directly instead of PropertyUtil.
+		  Reference to the map can also be obtained by using @Resource("propertyBase") in the file. 
+		  It is a dual implementation which can be used with placeholder and as a map
+	 -->
+	<bean id="propertyBase" class="com.redwood.rp.core.util.PropertyUtil">
+	    <property name="locations">
+	    <list>
+	        <value>classpath*:properties/${auction.environment}/*.properties</value>
+	        <value>classpath*:properties/common/*.properties</value>
+	    </list>
+		</property>
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="ignoreResourceNotFound" value="true" />
+	</bean>
+
+	<!-- Aspect declaration -->
+	<aop:aspectj-autoproxy />
+	<bean id="logger" class="com.redwood.rp.core.aspect.Logger" />
+	<bean id="cacheManager" class="com.redwood.rp.core.aspect.CacheManager" />
+
+	<!-- declare object Map -->
+	<bean id="mapper" class="org.codehaus.jackson.map.ObjectMapper" />
+
+</beans>

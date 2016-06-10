@@ -1,0 +1,20 @@
+How to share the common libraries from multiple projects in JBOSS:
+
+1. Set up a jboss module called "com/auction/common".
+   Please refer to the structure of "acpcore/env/sharedlib/auctionCommonmodule"
+   
+   The jars are missing, please copy these required jars to this folder.
+   
+2. Put the jboss-deployment-structure.xml in the "/WEB-INF"
+   Please refer to the "acpcore/env/sharedlib/jboss-deployment-structure.xml"
+   
+3. When deploy the service, we have to put below 4 jars in the individual serivces level like "${your war}/WEB-INF/lib", all other jars can be
+   under the auction common module
+   
+   acpcore.jar
+   slf4j-api.jar
+   logback-core-1.0.9.jar
+   logback-classic-1.0.9.jar
+   
+   
+   

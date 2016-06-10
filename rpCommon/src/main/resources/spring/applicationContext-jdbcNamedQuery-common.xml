@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<bean id="commonQueries" class="java.util.HashMap">
+		<constructor-arg>
+			<map key-type="java.lang.String" value-type="java.lang.String">
+				<entry key="GET_SOLD_PROPERTY_ACCESS_DETAILS_FOR_CODE"
+					value="SELECT * from mylandho_foreclosure.tbl_post_code where postcode = :POST_CODE and userID = :USER_ID" />
+
+				<entry key="GET_PROPERTY_INFORMATION"
+					value="Select temp.auctionNumber
+									  ,temp.auctionID
+									  ,temp.trusteeSale,temp.onlineEvent
+									  ,temp.terms_pdf,temp.online_terms_pdf, temp.pre_foreclosure,temp.hybridEvent
+									  ,temp.auctionType ,temp.product_type,temp.propertyType,temp.propertyId,temp.propertyState, temp.propertyOccupancyStatus , temp.poolNumber
+								      ,temp.globalPropId,temp.StatusCSV,temp.preSaleStatus,temp.auctionDayStatus,temp.sellerConfirmation,temp.subjectToStatus
+								      ,temp.venueid ,temp.status,temp.soldStatus
+								      ,temp.venueType
+								 from 
+								(select a.auctionNumber, a.auctionID, cast(a.trusteeSale as CHAR(30)) as trusteeSale,a.onlineEvent
+									  ,a.terms_pdf,a.online_terms_pdf, cast(a.pre_foreclosure as CHAR(30)) as pre_foreclosure,a.hybridEvent
+									  ,'commercial' as auctionType,product_type,propertyType,propertyId,propertyState, occupancy as propertyOccupancyStatus , poolNumber
+								      ,globalPropId,StatusCSV,pc.preSaleStatus,auctionDayStatus,sellerConfirmation,subjectToStatus
+								      ,pc.venueid ,pc.status,pc.soldStatus
+								      ,ev.venueType
+								from property_commercial pc, auctions a,event_venue ev
+								WHERE ev.venueid = pc.venueid
+								AND a.auctionID = pc.auctionID AND (a.auction_type='2') AND a.status != 0 and a.available != 0 
+								AND a.isTestEvent!='Y' AND a.demoAuction='0'
+								AND pc.globalPropId = :GLOBAL_PROPERTY_ID
+								UNION
+								select a.auctionNumber, a.auctionID, cast(a.trusteeSale as CHAR(30)) as trusteeSale,a.onlineEvent
+									  ,a.terms_pdf,a.online_terms_pdf, cast(a.pre_foreclosure as CHAR(30)) as pre_foreclosure,a.hybridEvent
+									  ,'land' as auctionType,'',propertyType,propertyId,propertyState, occupancy as propertyOccupancyStatus, poolNumber
+								      ,globalPropId,StatusCSV,pc.preSaleStatus,auctionDayStatus,sellerConfirmation,subjectToStatus
+								      ,pc.venueid ,pc.status,pc.soldStatus
+								      ,ev.venueType
+								from property_land pc, auctions a,event_venue ev
+								WHERE ev.venueid = pc.venueid
+								AND a.auctionID = pc.auctionID AND (a.auction_type='3') AND a.status != 0 and a.available != 0 
+								AND a.isTestEvent!='Y' AND a.demoAuction='0'
+								AND pc.globalPropId = :GLOBAL_PROPERTY_ID
+								UNION
+								select a.auctionNumber, a.auctionID, cast(a.trusteeSale as CHAR(30)) as trusteeSale,a.onlineEvent
+									  ,a.terms_pdf,a.online_terms_pdf, cast(a.pre_foreclosure as CHAR(30)) as pre_foreclosure,a.hybridEvent
+									  ,'notes' as auctionType,product_type,propertyType,propertyId,propertyState, propertyOccupancyStatus , poolNumber
+								      ,global_property_id,StatusCSV,pc.preSaleStatus,auctionDayStatus,sellerConfirmation,subjectToStatus
+								      ,pc.venueid ,pc.status,pc.soldStatus
+								      ,ev.venueType
+								from property_notes pc, auctions a,event_venue ev
+								WHERE ev.venueid = pc.venueid
+								AND a.auctionID = pc.auctionID AND (a.auction_type='4') AND a.status != 0 and a.available != 0 
+								AND a.isTestEvent!='Y' AND a.demoAuction='0'
+								AND pc.global_property_id = :GLOBAL_PROPERTY_ID
+								UNION
+								select a.auctionNumber, a.auctionID, cast(a.trusteeSale as CHAR(30)) as trusteeSale,a.onlineEvent
+									  ,a.terms_pdf,a.online_terms_pdf, cast(a.pre_foreclosure as CHAR(30)) as pre_foreclosure,a.hybridEvent
+									  ,'residential' as auctionType,product_type,propertyType,propertyId,propertyState, propertyOccupancyStatus , poolNumber
+								      ,globalPropId,StatusCSV,pc.preSaleStatus,auctionDayStatus,sellerConfirmation,subjectToStatus
+								      ,pc.venueid ,pc.status,pc.soldStatus
+								      ,ev.venueType
+								from property pc, auctions a,event_venue ev
+								WHERE ev.venueid = pc.venueid
+								AND a.auctionID = pc.auctionID 
+								AND (a.auction_type='0') AND a.status != 0 and a.available != 0 
+								AND a.isTestEvent!='Y' AND a.demoAuction='0'
+								AND pc.globalPropId = :GLOBAL_PROPERTY_ID) temp order by temp.auctionNumber asc">
+				</entry>
+	            <entry>
+	                 <key><value>GET_FAV_PROPERTIES_ALL</value></key>
+	                 <value><![CDATA[
+						SELECT DISTINCT R.userId, R.propertyId, R.globalPropID, R.status, R.auctionID
+	
+						FROM mylandho_foreclosure.property_fav R								
+						WHERE R.userId=:USER_ID AND R.status='1'				
+						ORDER BY R.Id DESC 
+	                 ]]></value>
+	            </entry>				
+	            <entry>
+					<key>
+						<value>GET_POF_BY_USER</value>
+					</key>
+					<value><![CDATA[
+					   select documentId,userId,documentType,documentName,documentDisplayName, DATE_FORMAT(expirationDate,'%Y-%m-%d') expirationDate,lkRegDocStatus.registrationDocStatus,pofAmount,docStatusUpdatedNotes 
+					   FROM registrationDocuments regDocs LEFT JOIN lookup_registrationDocStatus lkRegDocStatus  ON lkRegDocStatus.registrationDocStatusId=regDocs.documentStatus
+					   WHERE documentType=3 AND regDocs.isDeleted =0 AND userId=:user_id AND ( (lkRegDocStatus.registrationDocStatus<>'PENDING_APPROVAL' and expirationDate>CURDATE()) or 
+                       (lkRegDocStatus.registrationDocStatus='PENDING_APPROVAL') )
+                 ]]></value>
+				</entry>			
+			</map>
+		</constructor-arg>
+	</bean>
+
+</beans>

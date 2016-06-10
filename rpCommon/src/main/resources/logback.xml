@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+	<!-- Remove this on production -->
+	<!-- appender to Console -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+	</appender>
+
+	<!-- appender to FILE -->
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${jboss.server.log.dir}/propertyService.log</file>
+		<maxFileSize>100MB</maxFileSize>
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%-5p]%m%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${jboss.server.log.dir}/propertyService.log.%d{yyyy-MM-dd}</fileNamePattern>
+			 <maxHistory>10</maxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="RESPONSE_TIME_TRACKER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${jboss.server.log.dir}/time_tracker_propertyService.log</file>
+		<maxFileSize>100MB</maxFileSize>
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%-5p]%m%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${jboss.server.log.dir}/time_tracker_propertyService.log.%d{yyyy-MM-dd}</fileNamePattern>
+			 <maxHistory>10</maxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<logger name="com.redwood.rp" level="DEBUG" />
+	<logger name="org.springframework.beans.factory" level="WARN" />
+	<logger name="org.hibernate.SQL" level="WARN" />
+	<logger name="org.hibernate" level="WARN" />
+	<!-- log file for logging response times -->
+	<logger name="TIME_TRACKER" level="DEBUG">
+		<appender-ref ref="RESPONSE_TIME_TRACKER" />
+	</logger>
+
+	<!-- level: TRACE, DEBUG, INFO, WARN, ERROR, FATAL -->
+	<root level="DEBUG">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+		<appender-ref ref="RESPONSE_TIME_TRACKER" />
+	</root>
+
+</configuration> 

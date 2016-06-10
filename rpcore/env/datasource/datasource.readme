@@ -1,0 +1,10 @@
+
+1. Set up modules for DATASOURCE.  Put the modules under "${JBOSS_HOME}/modules" folder
+  
+  a). Module1 :  mysql module .  Please refer to the structure of "acpcore\env\module\mysqlModule"
+  
+  b). Module2 :  c3p0 module . Please refer to the structure of "acpcore\env\module\c3p0Module"
+  
+  
+2. Configure the standalone.xml.
+   Please refer to the structure of "acpcore\env\standalone.xml"

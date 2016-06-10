@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+	<!-- Remove this on production -->
+	<!-- appender to Console -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</Pattern>
+		</layout>
+	</appender>
+
+	<!-- appender to FILE -->
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${jboss.server.log.dir}/flauntService.log</file>
+		<maxFileSize>100MB</maxFileSize>
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%-5p]%m%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${jboss.server.log.dir}/flauntService.log.%d{yyyy-MM-dd}
+			</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="RESPONSE_TIME_TRACKER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${jboss.server.log.dir}/time_tracker_flauntService.log</file>
+		<maxFileSize>100MB</maxFileSize>
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%-5p]%m%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${jboss.server.log.dir}/time_tracker_flauntService.log.%d{yyyy-MM-dd}
+			</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+
+	<!-- log file for logging response times -->
+	<logger name="TIME_TRACKER" level="INFO">
+		<appender-ref ref="RESPONSE_TIME_TRACKER" />
+	</logger>
+	<logger name="com.redwood.rp" level="ERROR">
+		<appender-ref ref="FILE" />
+	</logger>
+	<logger name="org.springframework.beans.factory" level="WARN">
+		<appender-ref ref="FILE" />
+	</logger>
+	<logger name="org.hibernate.SQL" level="WARN">
+		<appender-ref ref="FILE" />
+	</logger>
+	<logger name="org.hibernate" level="WARN">
+		<appender-ref ref="FILE" />
+	</logger>
+
+	<!-- level: TRACE, DEBUG, INFO, WARN, ERROR, FATAL -->
+	<root level="INFO">
+	</root>
+
+</configuration>

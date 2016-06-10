@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE cache-config>
+<cache-config>
+
+	<!-- Add url's that need to be cached with their properties -->
+     
+	<service>
+		<uri>com.redwood.rp.property.ws.manager.impl.PropertyManagerImpl.getGlobalPropertyDetails</uri>
+		<config>
+			<cacheKey>PropertyDetails</cacheKey>
+			<cacheDuration>300</cacheDuration>
+			<paramsToBeAddedInCache>globalPropertyId</paramsToBeAddedInCache>
+		</config>
+	 </service> 
+ 
+	 <!--  Rule Engine -->
+	 <service>
+		<uri>com.redwood.rp.common.rule.service.impl.RuleServiceImpl.getRulesForService</uri>
+		<config>
+			<cacheKey>Rules</cacheKey>
+			<cacheDuration>300</cacheDuration>
+			<paramsToBeAddedInCache>serviceName</paramsToBeAddedInCache>
+		</config>
+	 </service> 
+	 <service>
+		<uri>com.redwood.rp.common.rule.service.impl.RuleServiceImpl.formRuleMasterModel</uri>
+		<config>
+			<cacheKey>RulesForServiceMaster</cacheKey>
+			<cacheDuration>300</cacheDuration>
+			<paramsToBeAddedInCache>serviceName</paramsToBeAddedInCache>
+		</config>
+	 </service> 
+	 	 <!--  Rule Engine -->
+	 <service>	 
+		<uri>com.redwood.rp.common.rule.service.impl.RuleServiceImpl.getRuleMap</uri>
+		<config>
+			<cacheKey>RuleMap</cacheKey>
+			<cacheDuration>300</cacheDuration>
+			<paramsToBeAddedInCache>serviceName</paramsToBeAddedInCache>
+		</config>
+	 </service> 
+	 <!--  Document Service -->
+	<service>
+		<uri>com.redwood.rp.documents.das.dao.impl.ListFileDAOImpl.fetchMimeDetails</uri>
+		<config>
+			<cacheKey>MimeDetails</cacheKey>
+			<cacheDuration>0</cacheDuration>
+			<paramsToBeAddedInCache></paramsToBeAddedInCache>
+		</config>
+	 </service>
+	<service>
+		<uri>com.redwood.rp.calendar.das.dao.impl.CalendarDAOImpl.fetchStates</uri>
+		<config>
+			<cacheKey>States</cacheKey>
+			<cacheDuration>86400</cacheDuration>
+			<paramsToBeAddedInCache></paramsToBeAddedInCache>
+		</config>
+	 </service>	 
+</cache-config>
